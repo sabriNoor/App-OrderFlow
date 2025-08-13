@@ -39,7 +39,7 @@ namespace App.MVC.Services
                     _logger.LogWarning("Login failed: user with email {Email} entered incorrect password", user.Email);
                     return ServiceResult<string>.Fail("Invalid password.");
                 }
-                var token = _jwt.GenerateJwtToken(user.Email, user.Role);
+                var token = _jwt.GenerateJwtToken(user.Email, user.Role,user.Id);
                 _logger.LogInformation("Login success: user {FirstName} {LastName} with email {Email} and role {Role} logged in successfully",
                      user.FirstName, user.LastName, user.Email, user.Role);
                 return ServiceResult<string>.Ok(token);
@@ -70,7 +70,6 @@ namespace App.MVC.Services
                 PasswordHasher.CreatePasswordHash(registerRequestDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
-                user.Role = "Admin";
                 await _authRepository.AddAsync(user);
                 _logger.LogInformation("Signup success: a new user {FirstName} {LastName} with email {Email} and role {Role} registerd successfully",
                     user.FirstName, user.LastName, user.Email, user.Role);

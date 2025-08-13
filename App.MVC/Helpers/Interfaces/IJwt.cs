@@ -7,6 +7,6 @@ namespace App.MVC.Helpers.Interfaces
 {
     public interface IJwt
     {
-        string GenerateJwtToken(string email, string role);
+        string GenerateJwtToken(string email, string role,int id);
     }
 }

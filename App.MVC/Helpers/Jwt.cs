@@ -21,15 +21,17 @@ namespace App.MVC.Helpers
             _jwtSettings = jwtSettings;
 
         }
-        public string GenerateJwtToken(string email, string role)
+        public string GenerateJwtToken(string email, string role,int id)
         {
             try
             {
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, email),
+                   // new Claim(JwtRegisteredClaimNames.Sub, email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Role, role)
+                    new Claim(ClaimTypes.NameIdentifier,id.ToString()),
+                    new Claim(ClaimTypes.Role, role),
+                    new Claim(ClaimTypes.Email,email)
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
