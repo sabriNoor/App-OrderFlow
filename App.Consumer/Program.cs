@@ -15,7 +15,17 @@ builder.Services.AddSingleton(resolver =>
 
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
 builder.Services.AddSingleton(resolver =>
-    resolver.GetRequiredService<IOptions<EmailConfiguration>>().Value);
+{
+    var config = resolver.GetRequiredService<IOptions<EmailConfiguration>>().Value;
+
+    var username = Environment.GetEnvironmentVariable("EMAIL_USERNAME");
+    var password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
+    if (!string.IsNullOrEmpty(username)) config.UserName = username;
+    if (!string.IsNullOrEmpty(password)) config.Password = password;
+
+    return config;
+});
+
 
 builder.Services.AddOpenApi();
 
