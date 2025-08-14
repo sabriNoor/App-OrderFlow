@@ -16,11 +16,16 @@ namespace App.Consumer.Services
     public class MailService: IMessageHandler
     {
         private readonly ILogger<MailService> _logger;
+        private readonly IEmailBodyBuilder _emailBodyBuilder;
         private readonly EmailConfiguration _emailConfiguration;
-        public MailService(ILogger<MailService> logger, EmailConfiguration emailConfiguration)
+        public MailService(
+            ILogger<MailService> logger,
+            EmailConfiguration emailConfiguration,
+            IEmailBodyBuilder emailBodyBuilder)
         {
             _logger = logger;
             _emailConfiguration = emailConfiguration;
+            _emailBodyBuilder = emailBodyBuilder;
 
         }
         public async Task HandleMessageAsync(string message)
@@ -38,9 +43,9 @@ namespace App.Consumer.Services
                 emailMessage.From.Add(MailboxAddress.Parse(_emailConfiguration.From));
                 emailMessage.To.Add(MailboxAddress.Parse(dto.Email));
                 emailMessage.Subject = dto.Subject;
-                emailMessage.Body = new TextPart("plain")
+                emailMessage.Body = new TextPart("html")
                 {
-                    Text = dto.Body
+                    Text = _emailBodyBuilder.GenerateEmailBody(dto.Body)
                 };
 
                 using var smtp = new MailKit.Net.Smtp.SmtpClient();

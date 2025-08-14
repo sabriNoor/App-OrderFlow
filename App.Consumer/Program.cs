@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IRabbitMQConsumer,RabbitMQConsumer>();
 builder.Services.AddHostedService<ConsumerHostedService>();
 
 builder.Services.AddTransient<IMessageHandler, MailService>();
+builder.Services.AddSingleton<IEmailBodyBuilder,OrderCeateMessageHandler>();
 
 var app = builder.Build();
 
