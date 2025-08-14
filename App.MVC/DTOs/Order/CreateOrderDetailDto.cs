@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.MVC.DTOs.Order
 {
-    public record class CreateOrderDetailDto
+    public record class CreateOrderDetailDTO
     {
         public int ProductId { get; init; }
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive integer")]

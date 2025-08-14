@@ -78,7 +78,7 @@ namespace App.MVC.Services
         }
 
 
-        private async Task ValidateProductsAndAdjustStockAsync(List<CreateOrderDetailDto> products)
+        private async Task ValidateProductsAndAdjustStockAsync(List<CreateOrderDetailDTO> products)
         {
             foreach (var od in products)
             {

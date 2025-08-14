@@ -8,6 +8,6 @@ namespace App.MVC.DTOs.Order
 {
     public record class CreateOrderDTO
     {
-    public List<CreateOrderDetailDto> Products { get; init; } = new List<CreateOrderDetailDto>();
+    public List<CreateOrderDetailDTO> Products { get; init; } = new List<CreateOrderDetailDTO>();
     }
 }
