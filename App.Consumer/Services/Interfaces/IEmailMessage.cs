@@ -7,8 +7,8 @@ namespace App.Consumer.Services.Interfaces
 {
     public interface IEmailMessage
     {
-        string Email { get; }
-        string Subject { get; }
-        string Body { get; }
+        string Email { get; set; }
+        string Subject { get; set; }
+        string Body { get; set; }
     }
 }
