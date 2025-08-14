@@ -31,7 +31,7 @@ namespace App.MVC.Controllers
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var email = User.FindFirst(ClaimTypes.Email)!.Value;
 
-            var result = await _orderService.CreateOrder(userId,email, orderDTO);
+            var result = await _orderService.CreateOrderAsync(userId,email, orderDTO);
             if (result.Success)
                 return CreatedAtAction(nameof(GetOrderByIdForUser), new { id = result?.Data?.Id }, result?.Data);
 
@@ -62,7 +62,7 @@ namespace App.MVC.Controllers
         public async Task<IActionResult> GetMyOrders()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var result = await _orderService.GetMyOrders(userId);
+            var result = await _orderService.GetMyOrdersAsync(userId);
             if (result.Success)
                 return Ok(result.Data);
 

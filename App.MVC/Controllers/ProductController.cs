@@ -29,7 +29,7 @@ namespace App.MVC.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _productService.CreateProduct(productDTO);
+            var result = await _productService.CreateProductAsync(productDTO);
             if (result.Success)
                 return CreatedAtAction(nameof(GetProductById), new { id = result?.Data?.Id }, result?.Data);
 
@@ -43,7 +43,7 @@ namespace App.MVC.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _productService.UpdateProduct(id, productDTO);
+            var result = await _productService.UpdateProductAsync(id, productDTO);
             if (result.Success)
                 return Ok(result.Data);
 
@@ -54,7 +54,7 @@ namespace App.MVC.Controllers
         [Authorize(Roles=Roles.Admin)]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var result = await _productService.DeleteProduct(id);
+            var result = await _productService.DeleteProductAsync(id);
             if (result.Success)
                 return Ok(new { Message = result.Data });
 
@@ -65,7 +65,7 @@ namespace App.MVC.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllProducts()
         {
-            var result = await _productService.GetAllProduct();
+            var result = await _productService.GetAllProductAsync();
             if (result.Success)
                 return Ok(result.Data);
 
@@ -76,7 +76,7 @@ namespace App.MVC.Controllers
         [Authorize]
         public async Task<IActionResult> GetProductById(int id)
         {
-            var result = await _productService.GetProductById(id);
+            var result = await _productService.GetProductByIdAsync(id);
             if (result.Success)
                 return Ok(result.Data);
 

@@ -32,13 +32,13 @@ namespace App.MVC.Services
             _rabbitMQPublisher = rabbitMQPublisher;
         }
 
-        public async Task<ServiceResult<OrderDTO>> CreateOrder(int userId, string email, CreateOrderDTO orderDTO)
+        public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(int userId, string email, CreateOrderDTO orderDTO)
         {
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                await ValidateProductsAndAdjustStock([.. orderDTO.Products]);
+                await ValidateProductsAndAdjustStockAsync([.. orderDTO.Products]);
 
                 var order = new Order
                 {
@@ -55,10 +55,12 @@ namespace App.MVC.Services
                 {
                     throw new Exception("Failed to create order");
                 }
+
                 await _unitOfWork.CommitAsync();
                 _logger.LogInformation("Order {OrderId} created successfully for User {UserId}", order.Id, userId);
 
-                await PublishOrderCreatedMessage(result[0], email);
+                await PublishOrderCreatedMessageAsync(result[0], email);
+
                 return ServiceResult<OrderDTO>.Ok(result[0]);
             }
             catch (ArgumentException ex)
@@ -76,7 +78,7 @@ namespace App.MVC.Services
         }
 
 
-        private async Task ValidateProductsAndAdjustStock(List<CreateOrderDetailDto> products)
+        private async Task ValidateProductsAndAdjustStockAsync(List<CreateOrderDetailDto> products)
         {
             foreach (var od in products)
             {
@@ -88,7 +90,7 @@ namespace App.MVC.Services
             }
 
         }
-        private async Task PublishOrderCreatedMessage(OrderDTO order, string email)
+        private async Task PublishOrderCreatedMessageAsync(OrderDTO order, string email)
         {
             var message = new OrderCreatedMessageDTO
             {
@@ -99,7 +101,7 @@ namespace App.MVC.Services
             await _rabbitMQPublisher.PublishMessageAsync(message, RabbitMQQueues.OrderQueue);
         }
 
-        public async Task<ServiceResult<List<OrderDTO>>> GetMyOrders(int userId)
+        public async Task<ServiceResult<List<OrderDTO>>> GetMyOrdersAsync(int userId)
         {
             try
             {

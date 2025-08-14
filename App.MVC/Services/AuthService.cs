@@ -24,7 +24,7 @@ namespace App.MVC.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResult<string>> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<ServiceResult<string>> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace App.MVC.Services
 
         }
 
-        public async Task<ServiceResult<string>> Register(RegisterRequestDTO registerRequestDTO)
+        public async Task<ServiceResult<string>> RegisterAsync(RegisterRequestDTO registerRequestDTO)
         {
 
             try

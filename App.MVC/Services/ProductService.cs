@@ -22,7 +22,7 @@ namespace App.MVC.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResult<Product>> CreateProduct(CreateUpdateProductDTO productDTO)
+        public async Task<ServiceResult<Product>> CreateProductAsync(CreateUpdateProductDTO productDTO)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace App.MVC.Services
             }
         }
 
-        public async Task<ServiceResult<Product>> UpdateProduct(int id, CreateUpdateProductDTO productDTO)
+        public async Task<ServiceResult<Product>> UpdateProductAsync(int id, CreateUpdateProductDTO productDTO)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace App.MVC.Services
         }
 
 
-        public async Task<ServiceResult<string>> DeleteProduct(int id)
+        public async Task<ServiceResult<string>> DeleteProductAsync(int id)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace App.MVC.Services
             }
         }
 
-        public async Task<ServiceResult<IEnumerable<Product>>> GetAllProduct()
+        public async Task<ServiceResult<IEnumerable<Product>>> GetAllProductAsync()
         {
             try
             {
@@ -120,7 +120,7 @@ namespace App.MVC.Services
             }
         }
 
-        public async Task<ServiceResult<Product>> GetProductById(int id)
+        public async Task<ServiceResult<Product>> GetProductByIdAsync(int id)
         {
             try
             {

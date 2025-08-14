@@ -26,7 +26,7 @@ namespace App.MVC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authService.Login(loginRequestDTO);
+            var result = await _authService.LoginAsync(loginRequestDTO);
             if (result.Success)
             {
                 return Ok(new { Token = result.Data });
@@ -43,7 +43,7 @@ namespace App.MVC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authService.Register(registerRequestDTO);
+            var result = await _authService.RegisterAsync(registerRequestDTO);
             if (result.Success)
             {
                 return CreatedAtAction(nameof(Register), new { Email = registerRequestDTO.Email }, new { Message = result.Data });
