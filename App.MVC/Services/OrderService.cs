@@ -8,6 +8,7 @@ using App.MVC.DTOs.Order;
 using App.MVC.Entities;
 using App.MVC.Repositories.Interfaces;
 using App.MVC.Services.Interfaces;
+using Newtonsoft.Json;
 
 namespace App.MVC.Services
 {
@@ -94,8 +95,9 @@ namespace App.MVC.Services
         {
             var message = new OrderCreatedMessageDTO
             {
-                Order = order,
-                Email = email
+                Email = email,
+                Subject = $"Order Confirmation - #{order.Id}",
+                Body= JsonConvert.SerializeObject(order)
             };
 
             await _rabbitMQPublisher.PublishMessageAsync(message, RabbitMQQueues.OrderQueue);

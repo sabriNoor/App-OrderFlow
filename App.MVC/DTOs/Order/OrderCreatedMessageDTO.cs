@@ -7,8 +7,11 @@ namespace App.MVC.DTOs.Order
 {
     public record class OrderCreatedMessageDTO
     {
-        public OrderDTO Order { get; set; } = null!;
         public string Email { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
+
+        public string Body { get; set; } = string.Empty;
+
 
     }
 }
