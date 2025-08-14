@@ -15,7 +15,7 @@ namespace App.MVC.Entities
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         [NotMapped]
         public decimal TotalPrice => OrderDetails.Sum(od => od.TotalPrice);
-        public ICollection<OrderDetail> OrderDetails = [];
+        public ICollection<OrderDetail> OrderDetails { get; set; }= new List<OrderDetail>();
         public int UserId { get; set; }
         public User User { get; set; } = null!;
     }

@@ -30,6 +30,6 @@ namespace App.MVC.Entities
         [StringLength(50)]
         public string Role { get; set; } = Roles.User;
 
-        public ICollection<Order> Orders = [];
+        public ICollection<Order> Orders{ get; set; } = new List<Order>();
     }
 }

@@ -22,7 +22,7 @@ namespace App.MVC.Entities
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive integer")]
         public int Quantity { get; set; }
         
-        public ICollection<OrderDetail> OrderDetails=[];
+        public ICollection<OrderDetail> OrderDetails{ get; set; }=new List<OrderDetail>();
         
         
 
