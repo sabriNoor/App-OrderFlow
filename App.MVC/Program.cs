@@ -76,8 +76,8 @@ try
     builder.Services.AddOpenApi();
 
     builder.Services.AddDbContext<ApplicationDBContext>(options =>
-         options
-         .UseSqlServer("Server=DESKTOP-VPBMQ65;Database=AppMVCDb;Trusted_connection=true;TrustServerCertificate=true;"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
     var app = builder.Build();
     if (app.Environment.IsDevelopment())
