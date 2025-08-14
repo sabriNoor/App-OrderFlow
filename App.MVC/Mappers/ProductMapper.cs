@@ -15,7 +15,18 @@ namespace App.MVC.Mappers
             {
                 Name = dto.Name,
                 Quantity = dto.Quantity,
-                Price=dto.Price
+                Price = dto.Price
+            };
+        }
+
+        public static ProductDTO ToDTO(this Product product)
+        {
+            return new ProductDTO()
+            {
+                Id=product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = product.Quantity
             };
         }
     }

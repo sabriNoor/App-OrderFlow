@@ -22,24 +22,23 @@ namespace App.MVC.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResult<Product>> CreateProductAsync(CreateUpdateProductDTO productDTO)
+        public async Task<ServiceResult<ProductDTO>> CreateProductAsync(CreateUpdateProductDTO productDTO)
         {
             try
             {
                 var product = productDTO.ToModel();
                 await _productRepository.AddAsync(product);
                 _logger.LogInformation("Product created successfully: {ProductName} (ID: {ProductId})", product.Name, product.Id);
-
-                return ServiceResult<Product>.Ok(product);
+                return ServiceResult<ProductDTO>.Ok(product.ToDTO());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating product: {ProductName}", productDTO.Name);
-                return ServiceResult<Product>.Fail("An unexpected error occurred while saving the product. Please try again.");
+                return ServiceResult<ProductDTO>.Fail("An unexpected error occurred while saving the product. Please try again.");
             }
         }
 
-        public async Task<ServiceResult<Product>> UpdateProductAsync(int id, CreateUpdateProductDTO productDTO)
+        public async Task<ServiceResult<ProductDTO>> UpdateProductAsync(int id, CreateUpdateProductDTO productDTO)
         {
             try
             {
@@ -47,7 +46,7 @@ namespace App.MVC.Services
                 if (product is null)
                 {
                     _logger.LogWarning("Update failed: Product with ID {ProductId} not found", id);
-                    return ServiceResult<Product>.Fail("Product not found.");
+                    return ServiceResult<ProductDTO>.Fail("Product not found.");
                 }
 
                 var originalProduct = new Product
@@ -71,12 +70,12 @@ namespace App.MVC.Services
                     originalProduct.Quantity, product.Quantity
                 );
 
-                return ServiceResult<Product>.Ok(product);
+                return ServiceResult<ProductDTO>.Ok(product.ToDTO());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while updating product: {ProductName}", productDTO.Name);
-                return ServiceResult<Product>.Fail("An unexpected error occurred while updating the product. Please try again.");
+                return ServiceResult<ProductDTO>.Fail("An unexpected error occurred while updating the product. Please try again.");
             }
         }
 
@@ -104,23 +103,23 @@ namespace App.MVC.Services
             }
         }
 
-        public async Task<ServiceResult<IEnumerable<Product>>> GetAllProductAsync()
+        public async Task<ServiceResult<IEnumerable<ProductDTO>>> GetAllProductAsync()
         {
             try
             {
-                var products = await _productRepository.GetAllAsync();
+                var products = await _productRepository.GetAllProductsAsync();
                 _logger.LogInformation("Fetched {Count} products from database.", products.Count());
 
-                return ServiceResult<IEnumerable<Product>>.Ok(products);
+                return ServiceResult<IEnumerable<ProductDTO>>.Ok(products);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while fetching all products.");
-                return ServiceResult<IEnumerable<Product>>.Fail("An unexpected error occurred while retrieving products. Please try again.");
+                return ServiceResult<IEnumerable<ProductDTO>>.Fail("An unexpected error occurred while retrieving products. Please try again.");
             }
         }
 
-        public async Task<ServiceResult<Product>> GetProductByIdAsync(int id)
+        public async Task<ServiceResult<ProductDTO>> GetProductByIdAsync(int id)
         {
             try
             {
@@ -128,16 +127,16 @@ namespace App.MVC.Services
                 if (product is null)
                 {
                     _logger.LogWarning("Get product failed: Product with ID {ProductId} not found", id);
-                    return ServiceResult<Product>.Fail("Product not found.");
+                    return ServiceResult<ProductDTO>.Fail("Product not found.");
                 }
 
                 _logger.LogInformation("Fetched product successfully: {ProductName} (ID: {ProductId})", product.Name, product.Id);
-                return ServiceResult<Product>.Ok(product);
+                return ServiceResult<ProductDTO>.Ok(product.ToDTO());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while fetching product with ID {ProductId}", id);
-                return ServiceResult<Product>.Fail("An unexpected error occurred while retrieving the product. Please try again.");
+                return ServiceResult<ProductDTO>.Fail("An unexpected error occurred while retrieving the product. Please try again.");
             }
         }
     }

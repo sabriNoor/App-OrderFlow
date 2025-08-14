@@ -10,10 +10,10 @@ namespace App.MVC.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<ServiceResult<Product>> CreateProductAsync(CreateUpdateProductDTO productDTO);
-        Task<ServiceResult<Product>> UpdateProductAsync(int id, CreateUpdateProductDTO productDTO);
+        Task<ServiceResult<ProductDTO>> CreateProductAsync(CreateUpdateProductDTO productDTO);
+        Task<ServiceResult<ProductDTO>> UpdateProductAsync(int id, CreateUpdateProductDTO productDTO);
         Task<ServiceResult<string>> DeleteProductAsync(int id);
-        Task<ServiceResult<IEnumerable<Product>>> GetAllProductAsync();
-        Task<ServiceResult<Product>> GetProductByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<ProductDTO>>> GetAllProductAsync();
+        Task<ServiceResult<ProductDTO>> GetProductByIdAsync(int id);
     }
 }
