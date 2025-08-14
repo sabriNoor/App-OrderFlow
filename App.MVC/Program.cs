@@ -76,8 +76,12 @@ try
     builder.Services.AddOpenApi();
 
     builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+         options
+         .UseSqlServer("Server=sqlserver,1433;Database=AppMVCDb;User Id=sa;Password=Abc@123456;TrustServerCertificate=true;"
+         , sqlServerOptions => sqlServerOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)));
 
     var app = builder.Build();
     if (app.Environment.IsDevelopment())
@@ -93,7 +97,11 @@ try
     var publisher = app.Services.GetRequiredService<IRabbitMQPublisher<OrderCreatedMessageDTO>>();
     await publisher.InitializeAsync();
 
-
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+        db.Database.Migrate(); 
+    }
     app.Run();
 
 }
