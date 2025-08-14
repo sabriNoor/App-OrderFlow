@@ -12,6 +12,7 @@ using App.MVC.Helpers;
 using App.MVC.Helpers.Interfaces;
 using App.MVC.Repositories;
 using App.MVC.Repositories.Interfaces;
+using App.MVC.DTOs.Order;
 
 try
 {
@@ -27,9 +28,13 @@ try
     }
 
     builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWT"));
+    builder.Services.Configure<RabbitMQSetting>(builder.Configuration.GetSection("RabbitMQ"));
+
 
     builder.Services.AddSingleton(sp =>
         sp.GetRequiredService<IOptions<JwtSettings>>().Value);
+    builder.Services.AddSingleton(resolver =>
+        resolver.GetRequiredService<IOptions<RabbitMQSetting>>().Value);
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -46,18 +51,23 @@ try
             };
         });
 
+    // RabbitMq
+    builder.Services.AddSingleton(typeof(IRabbitMQPublisher<>), typeof(RabbitMQPublisher<>));
+
     // Auth DI
-    builder.Services.AddScoped<IAuthRepository,AuthRepository>();
-    builder.Services.AddScoped<IAuthService,AuthService>();
-    builder.Services.AddScoped<IJwt,Jwt>();
+    builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IJwt, Jwt>();
     // Product DI
-    builder.Services.AddScoped<IProductRepository,ProductRepository>();
-    builder.Services.AddScoped<IProductService,ProductService>();
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<IProductService, ProductService>();
     // Order DI
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-    builder.Services.AddScoped<IOrderDetailRepository,OrderDetailRepository>();
-    builder.Services.AddScoped<IOrderRepository,OrderRepository>();
-    builder.Services.AddScoped<IOrderService,OrderService>();
+    builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+    builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+    builder.Services.AddScoped<IOrderService, OrderService>();
+
+
 
     builder.Services.AddAuthorization();
 
@@ -80,6 +90,8 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    var publisher = app.Services.GetRequiredService<IRabbitMQPublisher<OrderCreatedMessageDTO>>();
+    await publisher.InitializeAsync();
 
 
     app.Run();

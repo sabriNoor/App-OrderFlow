@@ -29,8 +29,9 @@ namespace App.MVC.Controllers
                 return BadRequest(ModelState);
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var email = User.FindFirst(ClaimTypes.Email)!.Value;
 
-            var result = await _orderService.CreateOrder(userId, orderDTO);
+            var result = await _orderService.CreateOrder(userId,email, orderDTO);
             if (result.Success)
                 return CreatedAtAction(nameof(GetOrderByIdForUser), new { id = result?.Data?.Id }, result?.Data);
 

@@ -17,16 +17,22 @@ namespace App.MVC.Services
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<OrderService> _logger;
+        private readonly IRabbitMQPublisher<OrderCreatedMessageDTO> _rabbitMQPublisher;
 
-        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IProductRepository productRepository, ILogger<OrderService> logger)
+        public OrderService(IUnitOfWork unitOfWork,
+        IOrderRepository orderRepository,
+        IProductRepository productRepository,
+        ILogger<OrderService> logger,
+        IRabbitMQPublisher<OrderCreatedMessageDTO> rabbitMQPublisher)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
 
-        public async Task<ServiceResult<OrderDTO>> CreateOrder(int userId, CreateOrderDTO orderDTO)
+        public async Task<ServiceResult<OrderDTO>> CreateOrder(int userId, string email, CreateOrderDTO orderDTO)
         {
             await _unitOfWork.BeginTransactionAsync();
 
@@ -51,6 +57,8 @@ namespace App.MVC.Services
                 }
                 await _unitOfWork.CommitAsync();
                 _logger.LogInformation("Order {OrderId} created successfully for User {UserId}", order.Id, userId);
+
+                await PublishOrderCreatedMessage(result[0], email);
                 return ServiceResult<OrderDTO>.Ok(result[0]);
             }
             catch (ArgumentException ex)
@@ -80,6 +88,16 @@ namespace App.MVC.Services
             }
 
         }
+        private async Task PublishOrderCreatedMessage(OrderDTO order, string email)
+        {
+            var message = new OrderCreatedMessageDTO
+            {
+                Order = order,
+                Email = email
+            };
+
+            await _rabbitMQPublisher.PublishMessageAsync(message, RabbitMQQueues.OrderQueue);
+        }
 
         public async Task<ServiceResult<List<OrderDTO>>> GetMyOrders(int userId)
         {
@@ -98,7 +116,7 @@ namespace App.MVC.Services
             }
         }
 
-        
+
         public async Task<ServiceResult<OrderDTO>> GetOrderByIdForUserAsync(int id, int userId)
         {
             try
@@ -120,12 +138,12 @@ namespace App.MVC.Services
             }
         }
 
-         public async Task<ServiceResult<OrderDTO>> GetOrderByIdForAdminAsync(int id)
+        public async Task<ServiceResult<OrderDTO>> GetOrderByIdForAdminAsync(int id)
         {
             try
             {
                 _logger.LogInformation("Fetching order with ID {OrderId}.", id);
-                List<OrderDTO> result = await _orderRepository.GetOrdersInformation(o => o.Id ==id);
+                List<OrderDTO> result = await _orderRepository.GetOrdersInformation(o => o.Id == id);
                 if (result.Count == 0)
                 {
                     _logger.LogWarning("Order with ID {OrderId} not found.", id);
