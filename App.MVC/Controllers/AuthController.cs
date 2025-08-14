@@ -29,7 +29,7 @@ namespace App.MVC.Controllers
             var result = await _authService.LoginAsync(loginRequestDTO);
             if (result.Success)
             {
-                return Ok(new { Token = result.Data });
+                return Ok(result.Data);
             }
 
             return Unauthorized(new { Error = result.ErrorMessage });

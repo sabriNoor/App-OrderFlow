@@ -24,7 +24,7 @@ namespace App.MVC.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResult<string>> LoginAsync(LoginRequestDTO loginRequestDTO)
+        public async Task<ServiceResult<LoginDTO>> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
             try
             {
@@ -32,23 +32,23 @@ namespace App.MVC.Services
                 if (user is null)
                 {
                     _logger.LogWarning("Login failed: user with email {Eamil} not found", loginRequestDTO.Email);
-                    return ServiceResult<string>.Fail("User not found.");
+                    return ServiceResult<LoginDTO>.Fail("User not found.");
                 }
                 if (!PasswordHasher.VerifyPasswordHash(loginRequestDTO.Password, user.PasswordHash, user.PasswordSalt))
                 {
                     _logger.LogWarning("Login failed: user with email {Email} entered incorrect password", user.Email);
-                    return ServiceResult<string>.Fail("Invalid password.");
+                    return ServiceResult<LoginDTO>.Fail("Invalid password.");
                 }
                 var token = _jwt.GenerateJwtToken(user.Email, user.Role,user.Id);
                 _logger.LogInformation("Login success: user {FirstName} {LastName} with email {Email} and role {Role} logged in successfully",
                      user.FirstName, user.LastName, user.Email, user.Role);
-                return ServiceResult<string>.Ok(token);
+                return ServiceResult<LoginDTO>.Ok(user.ToLoginDTO(token));
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred during login for email {Email}", loginRequestDTO.Email);
-                return ServiceResult<string>.Fail("An unexpected error occurred. Please try again later.");
+                return ServiceResult<LoginDTO>.Fail("An unexpected error occurred. Please try again later.");
             }
 
 

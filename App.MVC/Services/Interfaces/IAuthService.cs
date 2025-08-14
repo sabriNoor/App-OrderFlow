@@ -9,7 +9,7 @@ namespace App.MVC.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<ServiceResult<string>> LoginAsync(LoginRequestDTO loginRequestDTO);
+        Task<ServiceResult<LoginDTO>> LoginAsync(LoginRequestDTO loginRequestDTO);
         Task<ServiceResult<string>> RegisterAsync(RegisterRequestDTO registerRequestDTO);
     }
 }

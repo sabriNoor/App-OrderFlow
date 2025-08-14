@@ -18,5 +18,16 @@ namespace App.MVC.Mappers
                 Email = registerDTO.Email,
             };
         }
+        public static LoginDTO ToLoginDTO(this User user,string token)
+        {
+            return new LoginDTO
+            {
+                Id = user.Id,
+                Token = token,
+                Name = user.FirstName + " " + user.LastName,
+                Email = user.Email
+            };
+            
+        }
     }
 }
