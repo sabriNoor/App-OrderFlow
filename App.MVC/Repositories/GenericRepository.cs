@@ -11,12 +11,12 @@ namespace App.MVC.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly ApplicationDBContext _dBContext;
+        protected readonly ApplicationDBContext _dbContext;
         protected readonly DbSet<T> _dbSet;
-        public GenericRepository(ApplicationDBContext dBContext)
+        public GenericRepository(ApplicationDBContext dbContext)
         {
-            _dBContext = dBContext;
-            _dbSet = _dBContext.Set<T>();
+            _dbContext = dbContext;
+            _dbSet = _dbContext.Set<T>();
         }
         public async Task AddAsync(T entity)
         {
@@ -42,7 +42,7 @@ namespace App.MVC.Repositories
 
         public async Task SaveAsync()
         {
-            await _dBContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(T entity)
@@ -55,5 +55,6 @@ namespace App.MVC.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
     }
 }

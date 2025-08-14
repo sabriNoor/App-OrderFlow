@@ -15,5 +15,6 @@ namespace App.MVC.Repositories.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        
     }
 }

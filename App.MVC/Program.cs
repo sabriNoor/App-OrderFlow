@@ -53,6 +53,11 @@ try
     // Product DI
     builder.Services.AddScoped<IProductRepository,ProductRepository>();
     builder.Services.AddScoped<IProductService,ProductService>();
+    // Order DI
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped<IOrderDetailRepository,OrderDetailRepository>();
+    builder.Services.AddScoped<IOrderRepository,OrderRepository>();
+    builder.Services.AddScoped<IOrderService,OrderService>();
 
     builder.Services.AddAuthorization();
 
@@ -62,7 +67,7 @@ try
 
     builder.Services.AddDbContext<ApplicationDBContext>(options =>
          options
-         .UseSqlServer("Server=DESKTOP-VPBMQ65;Database=StudentManagerDb;Trusted_connection=true;TrustServerCertificate=true;"));
+         .UseSqlServer("Server=DESKTOP-VPBMQ65;Database=AppMVCDb;Trusted_connection=true;TrustServerCertificate=true;"));
 
     var app = builder.Build();
     if (app.Environment.IsDevelopment())
