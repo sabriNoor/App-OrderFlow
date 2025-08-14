@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using App.Consumer.DTOs;
 using App.Consumer.Models;
 using App.Consumer.Services.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-
 using Newtonsoft.Json;
 
 namespace App.Consumer.Services
@@ -27,7 +27,7 @@ namespace App.Consumer.Services
         {
             try
             {
-                var dto = JsonConvert.DeserializeObject<IEmailMessage>(message);
+                var dto = JsonConvert.DeserializeObject<EmailMessageDTO>(message);
                 if (dto == null)
                 {
                     _logger.LogWarning("Received null or invalid message: {Message}", message);
