@@ -100,7 +100,8 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-        db.Database.Migrate(); 
+        db.Database.Migrate();
+        SeedData.SeedAdmin(db);
     }
     app.Run();
 
