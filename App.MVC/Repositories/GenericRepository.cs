@@ -56,5 +56,11 @@ namespace App.MVC.Repositories
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
+        public void Add(T entity)
+        {
+             _dbSet.Add(entity);
+        }
+
+
     }
 }

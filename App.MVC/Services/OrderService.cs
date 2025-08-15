@@ -35,7 +35,7 @@ namespace App.MVC.Services
 
         public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(int userId, string email, CreateOrderDTO orderDTO)
         {
-            await _unitOfWork.BeginTransactionAsync();
+           // await _unitOfWork.BeginTransactionAsync();
 
             try
             {
@@ -47,7 +47,7 @@ namespace App.MVC.Services
                     OrderDetails = [.. orderDTO.Products.Select(p => new OrderDetail { ProductId = p.ProductId, Quantity = p.Quantity })]
                 };
 
-                await _orderRepository.AddAsync(order);
+                _orderRepository.Add(order);
 
                 await _unitOfWork.SaveChangesAsync();
 
@@ -57,7 +57,7 @@ namespace App.MVC.Services
                     throw new Exception("Failed to create order");
                 }
 
-                await _unitOfWork.CommitAsync();
+               // await _unitOfWork.CommitAsync();
                 _logger.LogInformation("Order {OrderId} created successfully for User {UserId}", order.Id, userId);
 
                 await PublishOrderCreatedMessageAsync(result[0], email);
@@ -66,13 +66,13 @@ namespace App.MVC.Services
             }
             catch (ArgumentException ex)
             {
-                await _unitOfWork.RollbackAsync();
+               // await _unitOfWork.RollbackAsync();
                 _logger.LogWarning("Order creation failed: {Message}", ex.Message);
                 return ServiceResult<OrderDTO>.Fail($"Failed to create order: {ex.Message}");
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackAsync();
+               // await _unitOfWork.RollbackAsync();
                 _logger.LogError(ex, "Unexpected error while creating order");
                 return ServiceResult<OrderDTO>.Fail("An unexpected error occurred while creating the order.");
             }
