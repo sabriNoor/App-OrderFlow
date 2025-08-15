@@ -12,9 +12,12 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
     restart: always
+    networks:
+      - sharednet  
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -24,6 +27,8 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     restart: always
+    networks:
+      - sharednet   
 
   mvcapp:
     build: .
@@ -35,7 +40,13 @@ services:
     environment:
       ConnectionStrings__Default: "Server=sqlserver,1433;Database=AppMVCDb;User Id=sa;Password=Abc@123456;TrustServerCertificate=true"
     restart: always
+    networks:
+      - sharednet   
 
 volumes:
   sql_data:
   rabbitmq_data:
+
+networks:
+  sharednet:      
+    name: shared_network  
