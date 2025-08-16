@@ -77,7 +77,7 @@ try
 
     builder.Services.AddDbContext<ApplicationDBContext>(options =>
          options
-         .UseSqlServer("Server=sqlserver,1433;Database=AppMVCDb;User Id=sa;Password=Abc@123456;TrustServerCertificate=true;"
+         .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
          , sqlServerOptions => sqlServerOptions.EnableRetryOnFailure(
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(10),
