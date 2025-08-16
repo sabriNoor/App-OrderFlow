@@ -7,7 +7,7 @@ namespace App.MVC.DTOs.Auth
 {
     public record class LoginDTO
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
         public string Token { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
