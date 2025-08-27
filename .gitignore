@@ -1,0 +1,43 @@
+# Build results
+**/bin/
+**/obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code settings
+**/.vscode/
+
+# Rider IDE
+**/.idea/
+
+# Visual Studio settings
+**/*.vs/
+
+# .NET Core specific
+**/project.lock.json
+**/project.fragment.lock.json
+**/artifacts/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+**/packages/
+*.sdf
+
+# Logs and dumps
+*.log
+*.pid
+*.svclog
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+*.env
